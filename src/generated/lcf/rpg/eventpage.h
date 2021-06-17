@@ -1,7 +1,7 @@
 /* !!!! GENERATED FILE - DO NOT EDIT !!!!
  * --------------------------------------
  *
- * This file is part of liblcf. Copyright (c) 2020 liblcf authors.
+ * This file is part of liblcf. Copyright (c) 2021 liblcf authors.
  * https://github.com/EasyRPG/liblcf - https://easyrpg.org
  *
  * liblcf is Free/Libre Open Source Software, released under the MIT License.
@@ -20,6 +20,7 @@
 #include "lcf/rpg/eventcommand.h"
 #include "lcf/rpg/eventpagecondition.h"
 #include "lcf/rpg/moveroute.h"
+#include "lcf/context.h"
 #include <ostream>
 #include <type_traits>
 
@@ -122,6 +123,19 @@ namespace rpg {
 			MoveSpeed_double = 5,
 			MoveSpeed_fourfold = 6
 		};
+		enum ManiacEventInfo {
+			ManiacEventInfo_action = 0,
+			ManiacEventInfo_touched = 1,
+			ManiacEventInfo_collision = 2,
+			ManiacEventInfo_auto_start = 3,
+			ManiacEventInfo_parallel = 4,
+			ManiacEventInfo_called = 5,
+			ManiacEventInfo_battle_start = 6,
+			ManiacEventInfo_battle_parallel = 7,
+			ManiacEventInfo_map_event = 16,
+			ManiacEventInfo_common_event = 32,
+			ManiacEventInfo_battle_event = 64
+		};
 
 		int ID = 0;
 		EventPageCondition condition;
@@ -168,6 +182,10 @@ namespace rpg {
 		os << static_cast<std::underlying_type_t<decltype(code)>>(code);
 		return os;
 	}
+	inline std::ostream& operator<<(std::ostream& os, EventPage::ManiacEventInfo code) {
+		os << static_cast<std::underlying_type_t<decltype(code)>>(code);
+		return os;
+	}
 
 	inline bool operator==(const EventPage& l, const EventPage& r) {
 		return l.condition == r.condition
@@ -192,6 +210,24 @@ namespace rpg {
 	}
 
 	std::ostream& operator<<(std::ostream& os, const EventPage& obj);
+
+	template <typename F, typename ParentCtx = Context<void,void>>
+	void ForEachString(EventPage& obj, const F& f, const ParentCtx* parent_ctx = nullptr) {
+		const auto ctx1 = Context<EventPage, ParentCtx>{ "condition", -1, &obj, parent_ctx };
+		ForEachString(obj.condition, f, &ctx1);
+		const auto ctx2 = Context<EventPage, ParentCtx>{ "character_name", -1, &obj, parent_ctx };
+		f(obj.character_name, ctx2);
+		const auto ctx14 = Context<EventPage, ParentCtx>{ "move_route", -1, &obj, parent_ctx };
+		ForEachString(obj.move_route, f, &ctx14);
+		for (int i = 0; i < static_cast<int>(obj.event_commands.size()); ++i) {
+			const auto ctx15 = Context<EventPage, ParentCtx>{ "event_commands", i, &obj, parent_ctx };
+			ForEachString(obj.event_commands[i], f, &ctx15);
+		}
+		(void)obj;
+		(void)f;
+		(void)parent_ctx;
+	}
+
 } // namespace rpg
 } // namespace lcf
 

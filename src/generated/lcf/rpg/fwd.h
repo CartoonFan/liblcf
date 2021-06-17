@@ -1,7 +1,7 @@
 /* !!!! GENERATED FILE - DO NOT EDIT !!!!
  * --------------------------------------
  *
- * This file is part of liblcf. Copyright (c) 2020 liblcf authors.
+ * This file is part of liblcf. Copyright (c) 2021 liblcf authors.
  * https://github.com/EasyRPG/liblcf - https://easyrpg.org
  *
  * liblcf is Free/Libre Open Source Software, released under the MIT License.
@@ -23,8 +23,9 @@ namespace rpg {
 	class BattleCommand;
 	class BattleCommands;
 	class BattlerAnimation;
-	class BattlerAnimationData;
-	class BattlerAnimationExtension;
+	class BattlerAnimationItemSkill;
+	class BattlerAnimationPose;
+	class BattlerAnimationWeapon;
 	class Chipset;
 	class Class;
 	class CommonEvent;
@@ -38,7 +39,6 @@ namespace rpg {
 	class EventPage;
 	class EventPageCondition;
 	class Item;
-	class ItemAnimation;
 	class Learning;
 	class Map;
 	class MapInfo;

@@ -1,7 +1,7 @@
 /* !!!! GENERATED FILE - DO NOT EDIT !!!!
  * --------------------------------------
  *
- * This file is part of liblcf. Copyright (c) 2020 liblcf authors.
+ * This file is part of liblcf. Copyright (c) 2021 liblcf authors.
  * https://github.com/EasyRPG/liblcf - https://easyrpg.org
  *
  * liblcf is Free/Libre Open Source Software, released under the MIT License.
@@ -17,6 +17,7 @@
 #include <string>
 #include "lcf/enum_tags.h"
 #include "lcf/rpg/moveroute.h"
+#include "lcf/context.h"
 #include <ostream>
 #include <type_traits>
 
@@ -115,6 +116,16 @@ namespace rpg {
 	}
 
 	std::ostream& operator<<(std::ostream& os, const SaveMapEventBase& obj);
+
+	template <typename F, typename ParentCtx = Context<void,void>>
+	void ForEachString(SaveMapEventBase& obj, const F& f, const ParentCtx* parent_ctx = nullptr) {
+		const auto ctx16 = Context<SaveMapEventBase, ParentCtx>{ "move_route", -1, &obj, parent_ctx };
+		ForEachString(obj.move_route, f, &ctx16);
+		(void)obj;
+		(void)f;
+		(void)parent_ctx;
+	}
+
 } // namespace rpg
 } // namespace lcf
 

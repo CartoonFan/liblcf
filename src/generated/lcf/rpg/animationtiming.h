@@ -1,7 +1,7 @@
 /* !!!! GENERATED FILE - DO NOT EDIT !!!!
  * --------------------------------------
  *
- * This file is part of liblcf. Copyright (c) 2020 liblcf authors.
+ * This file is part of liblcf. Copyright (c) 2021 liblcf authors.
  * https://github.com/EasyRPG/liblcf - https://easyrpg.org
  *
  * liblcf is Free/Libre Open Source Software, released under the MIT License.
@@ -16,6 +16,7 @@
 #include <stdint.h>
 #include "lcf/enum_tags.h"
 #include "lcf/rpg/sound.h"
+#include "lcf/context.h"
 #include <ostream>
 #include <type_traits>
 
@@ -82,6 +83,16 @@ namespace rpg {
 	}
 
 	std::ostream& operator<<(std::ostream& os, const AnimationTiming& obj);
+
+	template <typename F, typename ParentCtx = Context<void,void>>
+	void ForEachString(AnimationTiming& obj, const F& f, const ParentCtx* parent_ctx = nullptr) {
+		const auto ctx2 = Context<AnimationTiming, ParentCtx>{ "se", -1, &obj, parent_ctx };
+		ForEachString(obj.se, f, &ctx2);
+		(void)obj;
+		(void)f;
+		(void)parent_ctx;
+	}
+
 } // namespace rpg
 } // namespace lcf
 

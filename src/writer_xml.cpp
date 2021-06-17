@@ -1,5 +1,5 @@
 /*
- * This file is part of liblcf. Copyright (c) 2020 liblcf authors.
+ * This file is part of liblcf. Copyright (c) 2021 liblcf authors.
  * https://github.com/EasyRPG/liblcf - https://easyrpg.org
  *
  * liblcf is Free/Libre Open Source Software, released under the MIT License.
@@ -10,6 +10,7 @@
 #include <ostream>
 #include <vector>
 
+#include "lcf/saveopt.h"
 #include "lcf/writer_xml.h"
 #include "lcf/dbstring.h"
 #include "lcf/dbarray.h"
@@ -17,10 +18,11 @@
 
 namespace lcf {
 
-XmlWriter::XmlWriter(std::ostream& filestream) :
+XmlWriter::XmlWriter(std::ostream& filestream, EngineVersion engine) :
 	stream(filestream),
 	indent(0),
-	at_bol(true)
+	at_bol(true),
+	engine(engine)
 {
 	stream << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 }

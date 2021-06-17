@@ -1,5 +1,5 @@
 /*
- * This file is part of liblcf. Copyright (c) 2020 liblcf authors.
+ * This file is part of liblcf. Copyright (c) 2021 liblcf authors.
  * https://github.com/EasyRPG/liblcf - https://easyrpg.org
  *
  * liblcf is Free/Libre Open Source Software, released under the MIT License.
@@ -13,9 +13,10 @@
 
 namespace lcf {
 
-LcfWriter::LcfWriter(std::ostream& filestream, std::string encoding)
+LcfWriter::LcfWriter(std::ostream& filestream, EngineVersion engine, std::string encoding)
 	: stream(filestream)
 	, encoder(std::move(encoding))
+	, engine(engine)
 {
 }
 

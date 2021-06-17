@@ -1,7 +1,7 @@
 /* !!!! GENERATED FILE - DO NOT EDIT !!!!
  * --------------------------------------
  *
- * This file is part of liblcf. Copyright (c) 2020 liblcf authors.
+ * This file is part of liblcf. Copyright (c) 2021 liblcf authors.
  * https://github.com/EasyRPG/liblcf - https://easyrpg.org
  *
  * liblcf is Free/Libre Open Source Software, released under the MIT License.
@@ -11,7 +11,6 @@
 
 // Headers
 #include "lcf/rpg/enemy.h"
-
 
 namespace lcf {
 namespace rpg {
@@ -51,6 +50,7 @@ std::ostream& operator<<(std::ostream& os, const Enemy& obj) {
 		os << (i == 0 ? "[" : ", ") << obj.actions[i];
 	}
 	os << "]";
+	os << ", maniac_unarmed_animation="<< obj.maniac_unarmed_animation;
 	os << "}";
 	return os;
 }

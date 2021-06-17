@@ -1,29 +1,35 @@
-cmake_minimum_required(VERSION 3.7)
-cmake_policy(SET CMP0048 NEW)
+cmake_minimum_required(VERSION 3.10...3.20 FATAL_ERROR)
+if(${CMAKE_VERSION} VERSION_LESS 3.12)
+	# Use most recent policies, even for older cmake
+	cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
+endif()
 
 project(liblcf VERSION 0.6.2 LANGUAGES CXX)
 
-option(BUILD_SHARED_LIBS "Build shared library, disable for building the static library" ON)
-option(DISABLE_ICU "Disable ICU encoding detection (fallback to iconv, not recommended)" OFF)
-option(DISABLE_XML "Disable XML reading support (expat)" OFF)
-option(DISABLE_UPDATE_MIMEDB "Do not run update-mime-database after install" OFF)
-option(DISABLE_TOOLS "Do not build and install the tools" OFF)
+# Deprecation handling. Remove these lines one release later.
+SET(new_params "WITH_ICU;WITH_XML;UPDATE_MIMEDB;ENABLE_TOOLS;ENABLE_BENCHMARKS")
+SET(old_params "DISABLE_ICU;DISABLE_XML;DISABLE_UPDATE_MIMEDB;DISABLE_TOOLS;DISABLE_BENCHMARKS")
+foreach(x IN LISTS old_params)
+	if(DEFINED ${x})
+		list(FIND old_params ${x} index)
+		list(GET new_params ${index} new_value)
+		message(FATAL_ERROR "${x} was renamed to LIBLCF_${new_value} and the logic inverted.")
+	endif()
+endforeach()
+
+# Compilation options
+option(BUILD_SHARED_LIBS "Build shared library, disable for building the static library (default: ON)" ON)
+option(LIBLCF_WITH_ICU "ICU encoding detection (when OFF fallback to iconv, not recommended, default: ON)" ON)
+option(LIBLCF_WITH_XML "XML reading support (expat, default: ON)" ON)
+option(LIBLCF_UPDATE_MIMEDB "Whether to run update-mime-database after install (default: ON)" ON)
+option(LIBLCF_ENABLE_TOOLS "Whether to build the tools (default: ON)" ON)
+option(LIBLCF_ENABLE_TESTS "Whetner to build the unit tests (default: ON)" ON)
+option(LIBLCF_ENABLE_BENCHMARKS "Whether to build the benchmarks (default: OFF)" OFF)
 
 set(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "Override CMAKE_DEBUG_POSTFIX.")
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/builds/cmake/Modules)
-
 include(ConfigureWindows)
-
-# Doxygen
-find_package(Doxygen)
-if(DOXYGEN_FOUND)
-	add_custom_target(liblcf_doc
-		${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/builds/Doxyfile
-		DEPENDS lcf
-		WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/builds
-		COMMENT "Generating API documentation with Doxygen" VERBATIM)
-endif()
 
 # C++14 is required
 set(CMAKE_CXX_STANDARD 14)
@@ -31,10 +37,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS ON)
 
 # lcf library files
-add_library(lcf)
-
 set(LCF_SOURCES
-	src/data.cpp
 	src/dbarray.cpp
 	src/encoder.cpp
 	src/ini.cpp
@@ -55,8 +58,9 @@ set(LCF_SOURCES
 	src/reader_struct_impl.h
 	src/reader_util.cpp
 	src/reader_xml.cpp
-	src/rpg_fixup.cpp
 	src/rpg_setup.cpp
+	src/rpg_terms.cpp
+	src/saveopt.cpp
 	src/writer_lcf.cpp
 	src/writer_xml.cpp
 	src/generated/fwd_struct_impl.h
@@ -69,8 +73,9 @@ set(LCF_SOURCES
 	src/generated/ldb_battlecommand.cpp
 	src/generated/ldb_battlecommands.cpp
 	src/generated/ldb_battleranimation.cpp
-	src/generated/ldb_battleranimationdata.cpp
-	src/generated/ldb_battleranimationextension.cpp
+	src/generated/ldb_battleranimationitemskill.cpp
+	src/generated/ldb_battleranimationpose.cpp
+	src/generated/ldb_battleranimationweapon.cpp
 	src/generated/ldb_chipset.cpp
 	src/generated/ldb_class.cpp
 	src/generated/ldb_commonevent.cpp
@@ -78,7 +83,6 @@ set(LCF_SOURCES
 	src/generated/ldb_enemy.cpp
 	src/generated/ldb_enemyaction.cpp
 	src/generated/ldb_item.cpp
-	src/generated/ldb_itemanimation.cpp
 	src/generated/ldb_learning.cpp
 	src/generated/ldb_music.cpp
 	src/generated/ldb_skill.cpp
@@ -133,8 +137,9 @@ set(LCF_SOURCES
 	src/generated/rpg_battlecommand.cpp
 	src/generated/rpg_battlecommands.cpp
 	src/generated/rpg_battleranimation.cpp
-	src/generated/rpg_battleranimationdata.cpp
-	src/generated/rpg_battleranimationextension.cpp
+	src/generated/rpg_battleranimationitemskill.cpp
+	src/generated/rpg_battleranimationpose.cpp
+	src/generated/rpg_battleranimationweapon.cpp
 	src/generated/rpg_chipset.cpp
 	src/generated/rpg_class.cpp
 	src/generated/rpg_commonevent.cpp
@@ -149,7 +154,6 @@ set(LCF_SOURCES
 	src/generated/rpg_eventpage.cpp
 	src/generated/rpg_eventpagecondition.cpp
 	src/generated/rpg_item.cpp
-	src/generated/rpg_itemanimation.cpp
 	src/generated/rpg_learning.cpp
 	src/generated/rpg_map.cpp
 	src/generated/rpg_mapinfo.cpp
@@ -194,7 +198,7 @@ set(LCF_SOURCES
 )
 
 set(LCF_HEADERS
-	src/lcf/data.h
+	src/lcf/context.h
 	src/lcf/dbarray.h
 	src/lcf/dbarrayalloc.h
 	src/lcf/dbbitarray.h
@@ -230,8 +234,9 @@ set(LCF_HEADERS
 	src/generated/lcf/rpg/battlecommand.h
 	src/generated/lcf/rpg/battlecommands.h
 	src/generated/lcf/rpg/battleranimation.h
-	src/generated/lcf/rpg/battleranimationdata.h
-	src/generated/lcf/rpg/battleranimationextension.h
+	src/generated/lcf/rpg/battleranimationitemskill.h
+	src/generated/lcf/rpg/battleranimationpose.h
+	src/generated/lcf/rpg/battleranimationweapon.h
 	src/generated/lcf/rpg/chipset.h
 	src/generated/lcf/rpg/class.h
 	src/generated/lcf/rpg/commonevent.h
@@ -246,7 +251,6 @@ set(LCF_HEADERS
 	src/generated/lcf/rpg/eventpagecondition.h
 	src/generated/lcf/rpg/fwd.h
 	src/generated/lcf/rpg/item.h
-	src/generated/lcf/rpg/itemanimation.h
 	src/generated/lcf/rpg/learning.h
 	src/generated/lcf/rpg/map.h
 	src/generated/lcf/rpg/mapinfo.h
@@ -292,11 +296,7 @@ set(LCF_HEADERS
 	src/lcf/third_party/string_view.h
 )
 
-list(TRANSFORM LCF_SOURCES PREPEND ${CMAKE_CURRENT_SOURCE_DIR}/)
-list(TRANSFORM LCF_HEADERS PREPEND ${CMAKE_CURRENT_SOURCE_DIR}/)
-list(APPEND LCF_HEADERS ${CMAKE_CURRENT_BINARY_DIR}/src/lcf/config.h)
-
-target_sources(lcf PRIVATE ${LCF_SOURCES} PUBLIC ${LCF_HEADERS})
+add_library(lcf ${LCF_SOURCES} ${LCF_HEADERS})
 
 # IDE source grouping
 foreach(SG LDB LMT LMU LSD RPG THIRD_PARTY)
@@ -336,30 +336,37 @@ set_property(TARGET lcf PROPERTY DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}")
 set_property(TARGET lcf PROPERTY WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 # icu or fallback to iconv
-if(DISABLE_ICU)
-	find_package(Iconv REQUIRED)
-	target_link_libraries(lcf Iconv::Iconv)
-else()
+if(LIBLCF_WITH_ICU)
 	find_package(ICU COMPONENTS i18n uc data REQUIRED)
 	target_link_libraries(lcf ICU::i18n ICU::uc ICU::data)
 	list(APPEND LIBLCF_DEPS "icu-i18n")
 	set(LCF_SUPPORT_ICU "1")
+else()
+	find_package(Iconv REQUIRED)
+	target_link_libraries(lcf Iconv::Iconv)
 endif()
 
 # expat
-if(NOT DISABLE_XML)
-	find_package(EXPAT)
-	target_link_libraries(lcf EXPAT::EXPAT)
+if(LIBLCF_WITH_XML)
+	find_package(expat CONFIG)
+	if(expat_FOUND)
+		target_link_libraries(lcf expat::expat)
+	else()
+		# Fallback to old expat detection
+		find_package(EXPAT REQUIRED)
+		target_link_libraries(lcf EXPAT::EXPAT)
+	endif()
 	list(APPEND LIBLCF_DEPS "expat")
 	set(LCF_SUPPORT_XML "1")
 endif()
 
 # mime types
-if(NOT DISABLE_UPDATE_MIMEDB AND NOT CMAKE_CROSSCOMPILING)
+if(LIBLCF_UPDATE_MIMEDB AND NOT CMAKE_CROSSCOMPILING)
 	find_program(UPDATE_MIME_DATABASE update-mime-database)
 endif()
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/builds/cmake.config.h.in" "src/lcf/config.h" @ONLY)
+target_sources(lcf PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src/lcf/config.h)
 
 # .so version
 set_property(TARGET lcf PROPERTY SOVERSION 0)
@@ -376,7 +383,6 @@ set(LCF_INCLUDEDIR ${CMAKE_INSTALL_INCLUDEDIR})
 if(IS_ABSOLUTE ${LCF_INCLUDEDIR})
 	file(RELATIVE_PATH LCF_INCLUDEDIR ${CMAKE_INSTALL_PREFIX} ${LCF_INCLUDEDIR})
 endif()
-
 set(PACKAGE_TARNAME ${PROJECT_NAME})
 set(PACKAGE_VERSION ${PROJECT_VERSION})
 set(prefix "${CMAKE_INSTALL_PREFIX}")
@@ -395,7 +401,7 @@ install(
 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
-set(LCF_INSTALL_HEADERS ${LCF_HEADERS})
+set(LCF_INSTALL_HEADERS ${LCF_HEADERS} ${CMAKE_CURRENT_BINARY_DIR}/src/lcf/config.h)
 foreach(S ldb lmt lmu lsd rpg third_party)
 	set(SUBDIR_HEADERS ${LCF_INSTALL_HEADERS})
 	list(FILTER SUBDIR_HEADERS INCLUDE REGEX "/${S}/")
@@ -412,8 +418,6 @@ install(
 install(
 	FILES
 	  ${CMAKE_CURRENT_BINARY_DIR}/builds/liblcf-config.cmake
-	  ${CMAKE_CURRENT_SOURCE_DIR}/builds/cmake/Modules/FindEXPAT.cmake
-	  ${CMAKE_CURRENT_SOURCE_DIR}/builds/cmake/Modules/FindICU.cmake
 	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/liblcf)
 
 # mime types
@@ -421,7 +425,7 @@ install(
 	FILES ${CMAKE_CURRENT_SOURCE_DIR}/mime/${PROJECT_NAME}.xml
 	DESTINATION ${CMAKE_INSTALL_DATADIR}/mime/packages
 )
-if(NOT DISABLE_UPDATE_MIMEDB AND UPDATE_MIME_DATABASE)
+if(LIBLCF_UPDATE_MIMEDB AND UPDATE_MIME_DATABASE)
 	install(CODE
 		"execute_process(COMMAND ${UPDATE_MIME_DATABASE}
 			\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATADIR}/mime)"
@@ -429,30 +433,35 @@ if(NOT DISABLE_UPDATE_MIMEDB AND UPDATE_MIME_DATABASE)
 endif()
 
 # tests
-file(GLOB TEST_FILES ${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp)
-add_executable(test_runner_lcf EXCLUDE_FROM_ALL ${TEST_FILES})
-set_target_properties(test_runner_lcf PROPERTIES OUTPUT_NAME "test_runner")
-target_link_libraries(test_runner_lcf lcf)
-add_custom_target(check_lcf COMMAND test_runner_lcf)
-if(NOT TARGET check)
-	add_custom_target(check)
+if(LIBLCF_ENABLE_TESTS)
+	file(GLOB TEST_FILES ${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp)
+	add_executable(test_runner_lcf EXCLUDE_FROM_ALL ${TEST_FILES})
+	set_target_properties(test_runner_lcf PROPERTIES OUTPUT_NAME "test_runner")
+	target_link_libraries(test_runner_lcf lcf)
+	add_custom_target(check_lcf COMMAND test_runner_lcf)
+	if(NOT TARGET check)
+		add_custom_target(check)
+	endif()
+	add_dependencies(check_lcf test_runner_lcf)
+	add_dependencies(check check_lcf)
 endif()
-add_dependencies(check_lcf test_runner_lcf)
-add_dependencies(check check_lcf)
 
 # benchmarks
-file(GLOB BENCH_FILES ${CMAKE_CURRENT_SOURCE_DIR}/bench/*.cpp)
-foreach(i ${BENCH_FILES})
-	get_filename_component(name "${i}" NAME_WE)
-	add_executable(bench_${name} ${i})
-	target_link_libraries(bench_${name} lcf)
-endforeach()
+if(LIBLCF_ENABLE_BENCHMARKS)
+	file(GLOB BENCH_FILES ${CMAKE_CURRENT_SOURCE_DIR}/bench/*.cpp)
+	foreach(i ${BENCH_FILES})
+		get_filename_component(name "${i}" NAME_WE)
+		add_executable(bench_${name} ${i})
+		target_link_libraries(bench_${name} lcf)
+	endforeach()
+endif()
 
 # tools
-if(NOT DISABLE_TOOLS)
+if(LIBLCF_ENABLE_TOOLS)
 	add_custom_target(tools)
 	add_dependencies(tools lcf)
-	if(NOT DISABLE_XML)
+	list(APPEND TOOLS lcfstrings)
+	if(LIBLCF_WITH_XML)
 		list(APPEND TOOLS lcf2xml)
 	endif()
 	foreach(tool ${TOOLS})
@@ -461,4 +470,16 @@ if(NOT DISABLE_TOOLS)
 		add_dependencies(tools ${tool})
 		install(TARGETS ${tool} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 	endforeach()
+endif()
+
+# Doxygen documentation
+find_package(Doxygen)
+if(DOXYGEN_FOUND)
+	add_custom_target(liblcf_doc
+		${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/builds/Doxyfile
+		DEPENDS lcf
+		WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/builds
+		COMMENT "Generating API documentation with Doxygen" VERBATIM)
+else()
+	message(STATUS "This means no API documentation is generated.")
 endif()

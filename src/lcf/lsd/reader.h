@@ -1,5 +1,5 @@
 /*
- * This file is part of liblcf. Copyright (c) 2020 liblcf authors.
+ * This file is part of liblcf. Copyright (c) 2021 liblcf authors.
  * https://github.com/EasyRPG/liblcf - https://easyrpg.org
  *
  * liblcf is Free/Libre Open Source Software, released under the MIT License.
@@ -16,6 +16,7 @@
 #include <ctime>
 #include <stdint.h>
 #include "lcf/rpg/save.h"
+#include "lcf/saveopt.h"
 
 namespace lcf {
 
@@ -44,11 +45,6 @@ namespace LSD_Reader {
 	void PrepareSave(rpg::Save& save, int32_t version = 0);
 
 	/**
-	 * Returns a copy of the save data with defaults cleared.
-	 */
-	rpg::Save ClearDefaults(const rpg::Save& save, const rpg::MapInfo& map_info, const rpg::Map& map);
-
-	/**
 	 * Loads Savegame.
 	 */
 	std::unique_ptr<rpg::Save> Load(const std::string& filename, const std::string &encoding);
@@ -56,12 +52,12 @@ namespace LSD_Reader {
 	/**
 	 * Saves Savegame.
 	 */
-	bool Save(const std::string& filename, const rpg::Save& save, const std::string &encoding);
+	bool Save(const std::string& filename, const rpg::Save& save, EngineVersion engine, const std::string &encoding);
 
 	/*
 	 * Saves Savegame as XML.
 	 */
-	bool SaveXml(const std::string& filename, const rpg::Save& save);
+	bool SaveXml(const std::string& filename, const rpg::Save& save, EngineVersion engine);
 
 	/**
 	 * Loads Savegame as XML.
@@ -76,12 +72,12 @@ namespace LSD_Reader {
 	/**
 	 * Saves Savegame.
 	 */
-	bool Save(std::ostream& filestream, const rpg::Save& save, const std::string &encoding);
+	bool Save(std::ostream& filestream, const rpg::Save& save, EngineVersion engine, const std::string &encoding);
 
 	/*
 	 * Saves Savegame as XML.
 	 */
-	bool SaveXml(std::ostream& filestream, const rpg::Save& save);
+	bool SaveXml(std::ostream& filestream, const rpg::Save& save, EngineVersion engine);
 
 	/**
 	 * Loads Savegame as XML.

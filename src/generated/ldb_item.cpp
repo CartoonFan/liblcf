@@ -1,7 +1,7 @@
 /* !!!! GENERATED FILE - DO NOT EDIT !!!!
  * --------------------------------------
  *
- * This file is part of liblcf. Copyright (c) 2020 liblcf authors.
+ * This file is part of liblcf. Copyright (c) 2021 liblcf authors.
  * https://github.com/EasyRPG/liblcf - https://easyrpg.org
  *
  * liblcf is Free/Libre Open Source Software, released under the MIT License.
@@ -367,7 +367,7 @@ static TypedField<rpg::Item, int32_t> static_weapon_animation(
 	0,
 	1
 );
-static TypedField<rpg::Item, std::vector<rpg::ItemAnimation>> static_animation_data(
+static TypedField<rpg::Item, std::vector<rpg::BattlerAnimationItemSkill>> static_animation_data(
 	&rpg::Item::animation_data,
 	LDB_Reader::ChunkItem::animation_data,
 	"animation_data",
@@ -405,6 +405,13 @@ static TypedField<rpg::Item, int32_t> static_ranged_target(
 	&rpg::Item::ranged_target,
 	LDB_Reader::ChunkItem::ranged_target,
 	"ranged_target",
+	0,
+	0
+);
+static TypedField<rpg::Item, DBString> static_easyrpg_using_message(
+	&rpg::Item::easyrpg_using_message,
+	LDB_Reader::ChunkItem::easyrpg_using_message,
+	"easyrpg_using_message",
 	0,
 	0
 );
@@ -468,6 +475,7 @@ Field<rpg::Item> const* Struct<rpg::Item>::fields[] = {
 	&static_class_set,
 	&static_ranged_trajectory,
 	&static_ranged_target,
+	&static_easyrpg_using_message,
 	NULL
 };
 

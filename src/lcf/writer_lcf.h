@@ -1,5 +1,5 @@
 /*
- * This file is part of liblcf. Copyright (c) 2020 liblcf authors.
+ * This file is part of liblcf. Copyright (c) 2021 liblcf authors.
  * https://github.com/EasyRPG/liblcf - https://easyrpg.org
  *
  * liblcf is Free/Libre Open Source Software, released under the MIT License.
@@ -23,6 +23,7 @@
 #include <stdint.h>
 #include "lcf/reader_util.h"
 #include "lcf/encoder.h"
+#include "lcf/saveopt.h"
 
 namespace lcf {
 
@@ -36,9 +37,10 @@ public:
 	 * Constructs a new File Writer.
 	 *
 	 * @param filestream already opened filestream.
+	 * @param engine Which format to write.
 	 * @param encoding name of the encoding.
 	 */
-	LcfWriter(std::ostream& filestream, std::string encoding = "");
+	LcfWriter(std::ostream& filestream, EngineVersion engine, std::string encoding = "");
 
 	/**
 	 * Destructor. Closes the opened file.
@@ -117,11 +119,16 @@ public:
 	 */
 	std::string Decode(StringView str_to_encode);
 
+	/** @return true if 2k3 format, false if 2k format */
+	bool Is2k3() const;
+
 private:
 	/** File-stream managed by this Writer. */
 	std::ostream& stream;
 	/** Encoder object */
 	Encoder encoder;
+	/** Writing 2k3 format */
+	EngineVersion engine;
 
 	/**
 	 * Converts a 16bit signed integer to/from little-endian.
@@ -159,6 +166,10 @@ private:
 	static void SwapByteOrder(double &d);
 
 };
+
+inline bool LcfWriter::Is2k3() const {
+	return engine == EngineVersion::e2k3;
+}
 
 } //namespace lcf
 

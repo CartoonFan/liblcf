@@ -1,5 +1,5 @@
 /*
- * This file is part of liblcf. Copyright (c) 2020 liblcf authors.
+ * This file is part of liblcf. Copyright (c) 2021 liblcf authors.
  * https://github.com/EasyRPG/liblcf - https://easyrpg.org
  *
  * liblcf is Free/Libre Open Source Software, released under the MIT License.
@@ -35,12 +35,12 @@ namespace LMU_Reader {
 	/**
 	 * Saves map.
 	 */
-	bool Save(const std::string& filename, const rpg::Map& map, const std::string& encoding, SaveOpt opt = SaveOpt::eNone);
+	bool Save(const std::string& filename, const rpg::Map& map, EngineVersion engine, const std::string& encoding, SaveOpt opt = SaveOpt::eNone);
 
 	/**
 	 * Saves map as XML.
 	 */
-	bool SaveXml(const std::string& filename, const rpg::Map& map);
+	bool SaveXml(const std::string& filename, const rpg::Map& map, EngineVersion engine);
 
 	/**
 	 * Loads map as XML.
@@ -55,12 +55,12 @@ namespace LMU_Reader {
 	/**
 	 * Saves map.
 	 */
-	bool Save(std::ostream& filestream, const rpg::Map& map, const std::string& encoding, SaveOpt opt = SaveOpt::eNone);
+	bool Save(std::ostream& filestream, const rpg::Map& map, EngineVersion engine, const std::string& encoding, SaveOpt opt = SaveOpt::eNone);
 
 	/**
 	 * Saves map as XML.
 	 */
-	bool SaveXml(std::ostream& filestream, const rpg::Map& map);
+	bool SaveXml(std::ostream& filestream, const rpg::Map& map, EngineVersion engine);
 
 	/**
 	 * Loads map as XML.

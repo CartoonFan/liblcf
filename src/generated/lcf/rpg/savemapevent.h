@@ -1,7 +1,7 @@
 /* !!!! GENERATED FILE - DO NOT EDIT !!!!
  * --------------------------------------
  *
- * This file is part of liblcf. Copyright (c) 2020 liblcf authors.
+ * This file is part of liblcf. Copyright (c) 2021 liblcf authors.
  * https://github.com/EasyRPG/liblcf - https://easyrpg.org
  *
  * liblcf is Free/Libre Open Source Software, released under the MIT License.
@@ -15,8 +15,8 @@
 // Headers
 #include "lcf/rpg/savemapeventbase.h"
 #include <stdint.h>
-#include "lcf/rpg/event.h"
 #include "lcf/rpg/saveeventexecstate.h"
+#include "lcf/context.h"
 #include <ostream>
 #include <type_traits>
 
@@ -27,7 +27,6 @@ namespace lcf {
 namespace rpg {
 	class SaveMapEvent : public SaveMapEventBase {
 	public:
-		void Setup(const rpg::Event& event);
 		int ID = 0;
 		bool waiting_execution = false;
 		int32_t original_move_route_index = 0;
@@ -47,6 +46,16 @@ namespace rpg {
 	}
 
 	std::ostream& operator<<(std::ostream& os, const SaveMapEvent& obj);
+
+	template <typename F, typename ParentCtx = Context<void,void>>
+	void ForEachString(SaveMapEvent& obj, const F& f, const ParentCtx* parent_ctx = nullptr) {
+		const auto ctx4 = Context<SaveMapEvent, ParentCtx>{ "parallel_event_execstate", -1, &obj, parent_ctx };
+		ForEachString(obj.parallel_event_execstate, f, &ctx4);
+		(void)obj;
+		(void)f;
+		(void)parent_ctx;
+	}
+
 } // namespace rpg
 } // namespace lcf
 

@@ -1,5 +1,5 @@
 /*
- * This file is part of liblcf. Copyright (c) 2020 liblcf authors.
+ * This file is part of liblcf. Copyright (c) 2021 liblcf authors.
  * https://github.com/EasyRPG/liblcf - https://easyrpg.org
  *
  * liblcf is Free/Libre Open Source Software, released under the MIT License.
@@ -17,7 +17,6 @@
 #include "lcf/lsd/reader.h"
 #include "reader_struct.h"
 #include "lcf/rpg/save.h"
-#include "lcf/data.h"
 
 namespace lcf {
 
@@ -41,19 +40,21 @@ void Struct<S>::MakeTagMap() {
 
 template <typename T>
 struct StructDefault {
-	static T make() {
+	static T make(bool) {
 		return T();
 	}
 };
 
 template <>
 struct StructDefault<rpg::Actor> {
-	static rpg::Actor make() {
+	static rpg::Actor make(bool is2k3) {
 		auto actor = rpg::Actor();
-		actor.Setup();
+		actor.Setup(is2k3);
 		return actor;
 	}
 };
+
+
 
 template <class S>
 void Struct<S>::ReadLcf(S& obj, LcfReader& stream) {
@@ -77,13 +78,13 @@ void Struct<S>::ReadLcf(S& obj, LcfReader& stream) {
 			it->second->ReadLcf(obj, stream, chunk_info.length);
 			const uint32_t bytes_read = stream.Tell() - off;
 			if (bytes_read != chunk_info.length) {
-				fprintf(stderr, "Warning: Corrupted Chunk 0x%02" PRIx32 " (size: %" PRIu32 ", pos: 0x%" PRIx32 "): %s : Read %" PRIu32 " bytes! Reseting...\n",
-						chunk_info.ID, chunk_info.length, off, it->second->name, bytes_read);
+				fprintf(stderr, "%s: Corrupted Chunk 0x%02" PRIx32 " (size: %" PRIu32 ", pos: 0x%" PRIx32 "): %s : Read %" PRIu32 " bytes! Reseting...\n",
+						Struct<S>::name, chunk_info.ID, chunk_info.length, off, it->second->name, bytes_read);
 				stream.Seek(off + chunk_info.length);
 			}
 		}
 		else {
-			stream.Skip(chunk_info);
+			stream.Skip(chunk_info, Struct<S>::name);
 		}
 	}
 }
@@ -104,9 +105,9 @@ conditional_zero_writer(LcfWriter& stream) {
 
 template <class S>
 void Struct<S>::WriteLcf(const S& obj, LcfWriter& stream) {
-	const bool db_is2k3 = (Data::system.ldb_id == 2003);
+	const bool db_is2k3 = stream.Is2k3();
 
-	auto ref = StructDefault<S>::make();
+	auto ref = StructDefault<S>::make(db_is2k3);
 	int last = -1;
 	for (int i = 0; fields[i] != NULL; i++) {
 		const Field<S>* field = fields[i];
@@ -118,7 +119,7 @@ void Struct<S>::WriteLcf(const S& obj, LcfWriter& stream) {
 					  << " after " << last
 					  << " in struct " << name
 					  << std::endl;
-		if (!field->isPresentIfDefault(db_is2k3) && field->IsDefault(obj, ref)) {
+		if (!field->isPresentIfDefault(db_is2k3) && field->IsDefault(obj, ref, db_is2k3)) {
 			continue;
 		}
 		stream.WriteInt(field->id);
@@ -134,16 +135,16 @@ void Struct<S>::WriteLcf(const S& obj, LcfWriter& stream) {
 
 template <class S>
 int Struct<S>::LcfSize(const S& obj, LcfWriter& stream) {
-	const bool db_is2k3 = (Data::system.ldb_id == 2003);
+	const bool db_is2k3 = stream.Is2k3();
 	int result = 0;
-	auto ref = StructDefault<S>::make();
+	auto ref = StructDefault<S>::make(db_is2k3);
 	for (int i = 0; fields[i] != NULL; i++) {
 		const Field<S>* field = fields[i];
 		if (!db_is2k3 && field->is2k3) {
 			continue;
 		}
 		//printf("%s\n", field->name);
-		if (!field->isPresentIfDefault(db_is2k3) && field->IsDefault(obj, ref)) {
+		if (!field->isPresentIfDefault(db_is2k3) && field->IsDefault(obj, ref, db_is2k3)) {
 			continue;
 		}
 		result += LcfReader::IntSize(field->id);

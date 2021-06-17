@@ -1,7 +1,7 @@
 /* !!!! GENERATED FILE - DO NOT EDIT !!!!
  * --------------------------------------
  *
- * This file is part of liblcf. Copyright (c) 2020 liblcf authors.
+ * This file is part of liblcf. Copyright (c) 2021 liblcf authors.
  * https://github.com/EasyRPG/liblcf - https://easyrpg.org
  *
  * liblcf is Free/Libre Open Source Software, released under the MIT License.
@@ -263,11 +263,18 @@ static TypedField<rpg::Skill, int32_t> static_battler_animation(
 	0,
 	1
 );
-static TypedField<rpg::Skill, std::vector<rpg::BattlerAnimationData>> static_battler_animation_data(
+static TypedField<rpg::Skill, std::vector<rpg::BattlerAnimationItemSkill>> static_battler_animation_data(
 	&rpg::Skill::battler_animation_data,
 	LDB_Reader::ChunkSkill::battler_animation_data,
 	"battler_animation_data",
 	1,
+	1
+);
+static TypedField<rpg::Skill, DBString> static_easyrpg_battle2k3_message(
+	&rpg::Skill::easyrpg_battle2k3_message,
+	LDB_Reader::ChunkSkill::easyrpg_battle2k3_message,
+	"easyrpg_battle2k3_message",
+	0,
 	1
 );
 
@@ -310,6 +317,7 @@ Field<rpg::Skill> const* Struct<rpg::Skill>::fields[] = {
 	&static_affect_attr_defence,
 	&static_battler_animation,
 	&static_battler_animation_data,
+	&static_easyrpg_battle2k3_message,
 	NULL
 };
 

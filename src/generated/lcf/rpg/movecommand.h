@@ -1,7 +1,7 @@
 /* !!!! GENERATED FILE - DO NOT EDIT !!!!
  * --------------------------------------
  *
- * This file is part of liblcf. Copyright (c) 2020 liblcf authors.
+ * This file is part of liblcf. Copyright (c) 2021 liblcf authors.
  * https://github.com/EasyRPG/liblcf - https://easyrpg.org
  *
  * liblcf is Free/Libre Open Source Software, released under the MIT License.
@@ -16,6 +16,7 @@
 #include <stdint.h>
 #include "lcf/dbstring.h"
 #include "lcf/enum_tags.h"
+#include "lcf/context.h"
 #include <ostream>
 #include <type_traits>
 
@@ -139,6 +140,16 @@ namespace rpg {
 	}
 
 	std::ostream& operator<<(std::ostream& os, const MoveCommand& obj);
+
+	template <typename F, typename ParentCtx = Context<void,void>>
+	void ForEachString(MoveCommand& obj, const F& f, const ParentCtx* parent_ctx = nullptr) {
+		const auto ctx2 = Context<MoveCommand, ParentCtx>{ "parameter_string", -1, &obj, parent_ctx };
+		f(obj.parameter_string, ctx2);
+		(void)obj;
+		(void)f;
+		(void)parent_ctx;
+	}
+
 } // namespace rpg
 } // namespace lcf
 

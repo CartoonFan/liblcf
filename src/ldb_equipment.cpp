@@ -1,5 +1,5 @@
 /*
- * This file is part of liblcf. Copyright (c) 2020 liblcf authors.
+ * This file is part of liblcf. Copyright (c) 2021 liblcf authors.
  * https://github.com/EasyRPG/liblcf - https://easyrpg.org
  *
  * liblcf is Free/Libre Open Source Software, released under the MIT License.
@@ -33,7 +33,7 @@ void RawStruct<rpg::Equipment>::ReadLcf(rpg::Equipment& ref, LcfReader& stream, 
 		chunk_info.ID = 0x33;
 		chunk_info.length = length;
 
-		stream.Skip(chunk_info);
+		stream.Skip(chunk_info, "Equipment");
 
 		return;
 	}

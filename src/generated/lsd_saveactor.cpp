@@ -1,7 +1,7 @@
 /* !!!! GENERATED FILE - DO NOT EDIT !!!!
  * --------------------------------------
  *
- * This file is part of liblcf. Copyright (c) 2020 liblcf authors.
+ * This file is part of liblcf. Copyright (c) 2021 liblcf authors.
  * https://github.com/EasyRPG/liblcf - https://easyrpg.org
  *
  * liblcf is Free/Libre Open Source Software, released under the MIT License.
@@ -163,7 +163,7 @@ static TypedField<rpg::SaveActor, std::vector<int32_t>> static_battle_commands(
 	&rpg::SaveActor::battle_commands,
 	LSD_Reader::ChunkSaveActor::battle_commands,
 	"battle_commands",
-	0,
+	1,
 	1
 );
 static CountField<rpg::SaveActor, std::vector<int16_t>> static_size_status(

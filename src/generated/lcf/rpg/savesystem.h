@@ -1,7 +1,7 @@
 /* !!!! GENERATED FILE - DO NOT EDIT !!!!
  * --------------------------------------
  *
- * This file is part of liblcf. Copyright (c) 2020 liblcf authors.
+ * This file is part of liblcf. Copyright (c) 2021 liblcf authors.
  * https://github.com/EasyRPG/liblcf - https://easyrpg.org
  *
  * liblcf is Free/Libre Open Source Software, released under the MIT License.
@@ -19,6 +19,7 @@
 #include "lcf/enum_tags.h"
 #include "lcf/rpg/music.h"
 #include "lcf/rpg/sound.h"
+#include "lcf/context.h"
 #include <ostream>
 #include <type_traits>
 
@@ -60,9 +61,6 @@ namespace rpg {
 			"atb_wait"
 		);
 
-		void Setup();
-		void Fixup();
-		void UnFixup();
 		int32_t scene = 0;
 		int32_t frame_count = 0;
 		std::string graphics_name;
@@ -80,30 +78,30 @@ namespace rpg {
 		bool face_flip = false;
 		bool event_message_active = false;
 		bool music_stopping = false;
-		Music title_music;
-		Music battle_music;
-		Music battle_end_music;
-		Music inn_music;
+		Music title_music = Music{ "" };
+		Music battle_music = Music{ "" };
+		Music battle_end_music = Music{ "" };
+		Music inn_music = Music{ "" };
 		Music current_music;
 		Music before_vehicle_music;
 		Music before_battle_music;
 		Music stored_music;
-		Music boat_music;
-		Music ship_music;
-		Music airship_music;
-		Music gameover_music;
-		Sound cursor_se;
-		Sound decision_se;
-		Sound cancel_se;
-		Sound buzzer_se;
-		Sound battle_se;
-		Sound escape_se;
-		Sound enemy_attack_se;
-		Sound enemy_damaged_se;
-		Sound actor_damaged_se;
-		Sound dodge_se;
-		Sound enemy_death_se;
-		Sound item_se;
+		Music boat_music = Music{ "" };
+		Music ship_music = Music{ "" };
+		Music airship_music = Music{ "" };
+		Music gameover_music = Music{ "" };
+		Sound cursor_se = Sound{ "" };
+		Sound decision_se = Sound{ "" };
+		Sound cancel_se = Sound{ "" };
+		Sound buzzer_se = Sound{ "" };
+		Sound battle_se = Sound{ "" };
+		Sound escape_se = Sound{ "" };
+		Sound enemy_attack_se = Sound{ "" };
+		Sound enemy_damaged_se = Sound{ "" };
+		Sound actor_damaged_se = Sound{ "" };
+		Sound dodge_se = Sound{ "" };
+		Sound enemy_death_se = Sound{ "" };
+		Sound item_se = Sound{ "" };
 		int8_t transition_out = -1;
 		int8_t transition_in = -1;
 		int8_t battle_start_fadeout = -1;
@@ -118,6 +116,10 @@ namespace rpg {
 		int32_t save_count = 0;
 		int32_t save_slot = 1;
 		int32_t atb_mode = 0;
+		int32_t maniac_frameskip = 0;
+		int32_t maniac_picture_limit = 0;
+		std::vector<uint8_t> maniac_options;
+		std::vector<uint8_t> maniac_joypad_bindings;
 	};
 	inline std::ostream& operator<<(std::ostream& os, SaveSystem::Scene code) {
 		os << static_cast<std::underlying_type_t<decltype(code)>>(code);
@@ -183,7 +185,11 @@ namespace rpg {
 		&& l.background == r.background
 		&& l.save_count == r.save_count
 		&& l.save_slot == r.save_slot
-		&& l.atb_mode == r.atb_mode;
+		&& l.atb_mode == r.atb_mode
+		&& l.maniac_frameskip == r.maniac_frameskip
+		&& l.maniac_picture_limit == r.maniac_picture_limit
+		&& l.maniac_options == r.maniac_options
+		&& l.maniac_joypad_bindings == r.maniac_joypad_bindings;
 	}
 
 	inline bool operator!=(const SaveSystem& l, const SaveSystem& r) {
@@ -191,6 +197,62 @@ namespace rpg {
 	}
 
 	std::ostream& operator<<(std::ostream& os, const SaveSystem& obj);
+
+	template <typename F, typename ParentCtx = Context<void,void>>
+	void ForEachString(SaveSystem& obj, const F& f, const ParentCtx* parent_ctx = nullptr) {
+		const auto ctx18 = Context<SaveSystem, ParentCtx>{ "title_music", -1, &obj, parent_ctx };
+		ForEachString(obj.title_music, f, &ctx18);
+		const auto ctx19 = Context<SaveSystem, ParentCtx>{ "battle_music", -1, &obj, parent_ctx };
+		ForEachString(obj.battle_music, f, &ctx19);
+		const auto ctx20 = Context<SaveSystem, ParentCtx>{ "battle_end_music", -1, &obj, parent_ctx };
+		ForEachString(obj.battle_end_music, f, &ctx20);
+		const auto ctx21 = Context<SaveSystem, ParentCtx>{ "inn_music", -1, &obj, parent_ctx };
+		ForEachString(obj.inn_music, f, &ctx21);
+		const auto ctx22 = Context<SaveSystem, ParentCtx>{ "current_music", -1, &obj, parent_ctx };
+		ForEachString(obj.current_music, f, &ctx22);
+		const auto ctx23 = Context<SaveSystem, ParentCtx>{ "before_vehicle_music", -1, &obj, parent_ctx };
+		ForEachString(obj.before_vehicle_music, f, &ctx23);
+		const auto ctx24 = Context<SaveSystem, ParentCtx>{ "before_battle_music", -1, &obj, parent_ctx };
+		ForEachString(obj.before_battle_music, f, &ctx24);
+		const auto ctx25 = Context<SaveSystem, ParentCtx>{ "stored_music", -1, &obj, parent_ctx };
+		ForEachString(obj.stored_music, f, &ctx25);
+		const auto ctx26 = Context<SaveSystem, ParentCtx>{ "boat_music", -1, &obj, parent_ctx };
+		ForEachString(obj.boat_music, f, &ctx26);
+		const auto ctx27 = Context<SaveSystem, ParentCtx>{ "ship_music", -1, &obj, parent_ctx };
+		ForEachString(obj.ship_music, f, &ctx27);
+		const auto ctx28 = Context<SaveSystem, ParentCtx>{ "airship_music", -1, &obj, parent_ctx };
+		ForEachString(obj.airship_music, f, &ctx28);
+		const auto ctx29 = Context<SaveSystem, ParentCtx>{ "gameover_music", -1, &obj, parent_ctx };
+		ForEachString(obj.gameover_music, f, &ctx29);
+		const auto ctx30 = Context<SaveSystem, ParentCtx>{ "cursor_se", -1, &obj, parent_ctx };
+		ForEachString(obj.cursor_se, f, &ctx30);
+		const auto ctx31 = Context<SaveSystem, ParentCtx>{ "decision_se", -1, &obj, parent_ctx };
+		ForEachString(obj.decision_se, f, &ctx31);
+		const auto ctx32 = Context<SaveSystem, ParentCtx>{ "cancel_se", -1, &obj, parent_ctx };
+		ForEachString(obj.cancel_se, f, &ctx32);
+		const auto ctx33 = Context<SaveSystem, ParentCtx>{ "buzzer_se", -1, &obj, parent_ctx };
+		ForEachString(obj.buzzer_se, f, &ctx33);
+		const auto ctx34 = Context<SaveSystem, ParentCtx>{ "battle_se", -1, &obj, parent_ctx };
+		ForEachString(obj.battle_se, f, &ctx34);
+		const auto ctx35 = Context<SaveSystem, ParentCtx>{ "escape_se", -1, &obj, parent_ctx };
+		ForEachString(obj.escape_se, f, &ctx35);
+		const auto ctx36 = Context<SaveSystem, ParentCtx>{ "enemy_attack_se", -1, &obj, parent_ctx };
+		ForEachString(obj.enemy_attack_se, f, &ctx36);
+		const auto ctx37 = Context<SaveSystem, ParentCtx>{ "enemy_damaged_se", -1, &obj, parent_ctx };
+		ForEachString(obj.enemy_damaged_se, f, &ctx37);
+		const auto ctx38 = Context<SaveSystem, ParentCtx>{ "actor_damaged_se", -1, &obj, parent_ctx };
+		ForEachString(obj.actor_damaged_se, f, &ctx38);
+		const auto ctx39 = Context<SaveSystem, ParentCtx>{ "dodge_se", -1, &obj, parent_ctx };
+		ForEachString(obj.dodge_se, f, &ctx39);
+		const auto ctx40 = Context<SaveSystem, ParentCtx>{ "enemy_death_se", -1, &obj, parent_ctx };
+		ForEachString(obj.enemy_death_se, f, &ctx40);
+		const auto ctx41 = Context<SaveSystem, ParentCtx>{ "item_se", -1, &obj, parent_ctx };
+		ForEachString(obj.item_se, f, &ctx41);
+		(void)obj;
+		(void)f;
+		(void)parent_ctx;
+	}
+
 } // namespace rpg
 } // namespace lcf
 

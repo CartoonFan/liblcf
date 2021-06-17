@@ -1,7 +1,7 @@
 /* !!!! GENERATED FILE - DO NOT EDIT !!!!
  * --------------------------------------
  *
- * This file is part of liblcf. Copyright (c) 2020 liblcf authors.
+ * This file is part of liblcf. Copyright (c) 2021 liblcf authors.
  * https://github.com/EasyRPG/liblcf - https://easyrpg.org
  *
  * liblcf is Free/Libre Open Source Software, released under the MIT License.
@@ -18,7 +18,8 @@
 #include "lcf/dbbitarray.h"
 #include "lcf/dbstring.h"
 #include "lcf/enum_tags.h"
-#include "lcf/rpg/itemanimation.h"
+#include "lcf/rpg/battleranimationitemskill.h"
+#include "lcf/context.h"
 #include <ostream>
 #include <type_traits>
 
@@ -29,6 +30,9 @@ namespace lcf {
 namespace rpg {
 	class Item {
 	public:
+		// Sentinel name used to denote that the default item start message should be used.
+		static constexpr const char* kDefaultMessage = "default_message";
+
 		enum Type {
 			Type_normal = 0,
 			Type_weapon = 1,
@@ -124,11 +128,12 @@ namespace rpg {
 		int32_t state_chance = 0;
 		bool reverse_state_effect = false;
 		int32_t weapon_animation = -1;
-		std::vector<ItemAnimation> animation_data;
+		std::vector<BattlerAnimationItemSkill> animation_data;
 		bool use_skill = false;
 		DBBitArray class_set;
 		int32_t ranged_trajectory = 0;
 		int32_t ranged_target = 0;
+		DBString easyrpg_using_message = DBString(kDefaultMessage);
 	};
 	inline std::ostream& operator<<(std::ostream& os, Item::Type code) {
 		os << static_cast<std::underlying_type_t<decltype(code)>>(code);
@@ -195,7 +200,8 @@ namespace rpg {
 		&& l.use_skill == r.use_skill
 		&& l.class_set == r.class_set
 		&& l.ranged_trajectory == r.ranged_trajectory
-		&& l.ranged_target == r.ranged_target;
+		&& l.ranged_target == r.ranged_target
+		&& l.easyrpg_using_message == r.easyrpg_using_message;
 	}
 
 	inline bool operator!=(const Item& l, const Item& r) {
@@ -203,6 +209,20 @@ namespace rpg {
 	}
 
 	std::ostream& operator<<(std::ostream& os, const Item& obj);
+
+	template <typename F, typename ParentCtx = Context<void,void>>
+	void ForEachString(Item& obj, const F& f, const ParentCtx* parent_ctx = nullptr) {
+		const auto ctx1 = Context<Item, ParentCtx>{ "name", -1, &obj, parent_ctx };
+		f(obj.name, ctx1);
+		const auto ctx2 = Context<Item, ParentCtx>{ "description", -1, &obj, parent_ctx };
+		f(obj.description, ctx2);
+		const auto ctx53 = Context<Item, ParentCtx>{ "easyrpg_using_message", -1, &obj, parent_ctx };
+		f(obj.easyrpg_using_message, ctx53);
+		(void)obj;
+		(void)f;
+		(void)parent_ctx;
+	}
+
 } // namespace rpg
 } // namespace lcf
 

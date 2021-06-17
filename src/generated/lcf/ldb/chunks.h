@@ -1,7 +1,7 @@
 /* !!!! GENERATED FILE - DO NOT EDIT !!!!
  * --------------------------------------
  *
- * This file is part of liblcf. Copyright (c) 2020 liblcf authors.
+ * This file is part of liblcf. Copyright (c) 2021 liblcf authors.
  * https://github.com/EasyRPG/liblcf - https://easyrpg.org
  *
  * liblcf is Free/Libre Open Source Software, released under the MIT License.
@@ -236,7 +236,45 @@ namespace LDB_Reader {
 			death_teleport_face = 0x1D
 		};
 	};
-	struct ChunkBattlerAnimationExtension {
+	struct ChunkBattlerAnimation {
+		enum Index {
+			/** String */
+			name = 0x01,
+			/** Integer */
+			speed = 0x02,
+			/** Array - rpg::BattlerAnimationPose */
+			poses = 0x0A,
+			/** Array - rpg::BattlerAnimationWeapon */
+			weapons = 0x0B
+		};
+	};
+	struct ChunkBattlerAnimationItemSkill {
+		enum Index {
+			/**  */
+			unknown02 = 0x02,
+			/**  */
+			type = 0x03,
+			/**  */
+			weapon_animation_id = 0x04,
+			/**  */
+			movement = 0x05,
+			/**  */
+			after_image = 0x06,
+			/**  */
+			attacks = 0x07,
+			/**  */
+			ranged = 0x08,
+			/**  */
+			ranged_animation_id = 0x09,
+			/**  */
+			ranged_speed = 0x0C,
+			/**  */
+			battle_animation_id = 0x0D,
+			/**  */
+			pose = 0x0E
+		};
+	};
+	struct ChunkBattlerAnimationPose {
 		enum Index {
 			/** String */
 			name = 0x01,
@@ -247,29 +285,17 @@ namespace LDB_Reader {
 			/** Integer */
 			animation_type = 0x04,
 			/** Integer */
-			animation_id = 0x05
+			battle_animation_id = 0x05
 		};
 	};
-	struct ChunkBattlerAnimation {
+	struct ChunkBattlerAnimationWeapon {
 		enum Index {
 			/** String */
 			name = 0x01,
+			/** String */
+			weapon_name = 0x02,
 			/** Integer */
-			speed = 0x02,
-			/** Array - rpg::BattlerAnimationExtension */
-			base_data = 0x0A,
-			/** Array - rpg::BattlerAnimationExtension */
-			weapon_data = 0x0B
-		};
-	};
-	struct ChunkBattlerAnimationData {
-		enum Index {
-			/** Integer */
-			move = 0x05,
-			/** Integer */
-			after_image = 0x06,
-			/** Integer */
-			pose = 0x0E
+			weapon_index = 0x03
 		};
 	};
 	struct ChunkChipset {
@@ -415,29 +441,9 @@ namespace LDB_Reader {
 			/** Integer - RPG2003 */
 			battler_animation = 0x31,
 			/** ? - RPG2003 */
-			battler_animation_data = 0x32
-		};
-	};
-	struct ChunkItemAnimation {
-		enum Index {
-			/**  */
-			type = 0x03,
-			/**  */
-			weapon_anim = 0x04,
-			/**  */
-			movement = 0x05,
-			/**  */
-			after_image = 0x06,
-			/**  */
-			attacks = 0x07,
-			/**  */
-			ranged = 0x08,
-			/**  */
-			ranged_anim = 0x09,
-			/**  */
-			ranged_speed = 0x0C,
-			/**  */
-			battle_anim = 0x0D
+			battler_animation_data = 0x32,
+			/** RPG Maker 2003 battle skill start notification */
+			easyrpg_battle2k3_message = 0xC9
 		};
 	};
 	struct ChunkItem {
@@ -553,7 +559,9 @@ namespace LDB_Reader {
 			/** Integer */
 			ranged_trajectory = 0x4B,
 			/** Integer */
-			ranged_target = 0x4C
+			ranged_target = 0x4C,
+			/** Item usage message in battle */
+			easyrpg_using_message = 0xC9
 		};
 	};
 	struct ChunkEnemyAction {
@@ -633,7 +641,9 @@ namespace LDB_Reader {
 			/** Array - Short */
 			attribute_ranks = 0x22,
 			/** Array - rpg::EnemyAction */
-			actions = 0x2A
+			actions = 0x2A,
+			/** Animation for normal enemy attacks */
+			maniac_unarmed_animation = 0x0F
 		};
 	};
 	struct ChunkTroopMember {
@@ -1137,7 +1147,47 @@ namespace LDB_Reader {
 			/** String */
 			yes = 0x98,
 			/** String */
-			no = 0x99
+			no = 0x99,
+			/** Item number separator */
+			easyrpg_item_number_separator = 0xC8,
+			/** Skill cost separator */
+			easyrpg_skill_cost_separator = 0xC9,
+			/** Equipment window arrow */
+			easyrpg_equipment_arrow = 0xCA,
+			/** Status scene Name */
+			easyrpg_status_scene_name = 0xCB,
+			/** Status scene Class */
+			easyrpg_status_scene_class = 0xCC,
+			/** Status scene Title */
+			easyrpg_status_scene_title = 0xCD,
+			/** Status scene Condition */
+			easyrpg_status_scene_condition = 0xCE,
+			/** Status scene Front */
+			easyrpg_status_scene_front = 0xCF,
+			/** Status scene Back */
+			easyrpg_status_scene_back = 0xD0,
+			/** Order scene Confirm */
+			easyrpg_order_scene_confirm = 0xD1,
+			/** Order scene Redo */
+			easyrpg_order_scene_redo = 0xD2,
+			/** RPG Maker 2003 battle monster Double attack notification */
+			easyrpg_battle2k3_double_attack = 0xD3,
+			/** RPG Maker 2003 battle monster Defend notification */
+			easyrpg_battle2k3_defend = 0xD4,
+			/** RPG Maker 2003 battle monster Observe notification */
+			easyrpg_battle2k3_observe = 0xD5,
+			/** RPG Maker 2003 battle monster Charge notification */
+			easyrpg_battle2k3_charge = 0xD6,
+			/** RPG Maker 2003 battle monster Self-Destruct notification */
+			easyrpg_battle2k3_selfdestruct = 0xD7,
+			/** RPG Maker 2003 battle monster Escape notification */
+			easyrpg_battle2k3_escape = 0xD8,
+			/** Message for back and pincer attack */
+			easyrpg_battle2k3_special_combat_back = 0xD9,
+			/** RPG Maker 2003 battle general skill start notification */
+			easyrpg_battle2k3_skill = 0xDA,
+			/** RPG Maker 2003 battle general item start notification */
+			easyrpg_battle2k3_item = 0xDB
 		};
 	};
 	struct ChunkMusic {

@@ -1,7 +1,7 @@
 /* !!!! GENERATED FILE - DO NOT EDIT !!!!
  * --------------------------------------
  *
- * This file is part of liblcf. Copyright (c) 2020 liblcf authors.
+ * This file is part of liblcf. Copyright (c) 2021 liblcf authors.
  * https://github.com/EasyRPG/liblcf - https://easyrpg.org
  *
  * liblcf is Free/Libre Open Source Software, released under the MIT License.
@@ -12,7 +12,7 @@
 // Headers
 #include "lcf/rpg/item.h"
 
-
+constexpr const char* lcf::rpg::Item::kDefaultMessage;
 namespace lcf {
 namespace rpg {
 
@@ -90,6 +90,7 @@ std::ostream& operator<<(std::ostream& os, const Item& obj) {
 	os << "]";
 	os << ", ranged_trajectory="<< obj.ranged_trajectory;
 	os << ", ranged_target="<< obj.ranged_target;
+	os << ", easyrpg_using_message="<< obj.easyrpg_using_message;
 	os << "}";
 	return os;
 }

@@ -1,7 +1,7 @@
 /* !!!! GENERATED FILE - DO NOT EDIT !!!!
  * --------------------------------------
  *
- * This file is part of liblcf. Copyright (c) 2020 liblcf authors.
+ * This file is part of liblcf. Copyright (c) 2021 liblcf authors.
  * https://github.com/EasyRPG/liblcf - https://easyrpg.org
  *
  * liblcf is Free/Libre Open Source Software, released under the MIT License.
@@ -17,6 +17,7 @@
 #include <vector>
 #include "lcf/dbstring.h"
 #include "lcf/rpg/enemyaction.h"
+#include "lcf/context.h"
 #include <ostream>
 #include <type_traits>
 
@@ -49,6 +50,7 @@ namespace rpg {
 		std::vector<uint8_t> state_ranks;
 		std::vector<uint8_t> attribute_ranks;
 		std::vector<EnemyAction> actions;
+		int32_t maniac_unarmed_animation = 1;
 	};
 
 	inline bool operator==(const Enemy& l, const Enemy& r) {
@@ -72,7 +74,8 @@ namespace rpg {
 		&& l.levitate == r.levitate
 		&& l.state_ranks == r.state_ranks
 		&& l.attribute_ranks == r.attribute_ranks
-		&& l.actions == r.actions;
+		&& l.actions == r.actions
+		&& l.maniac_unarmed_animation == r.maniac_unarmed_animation;
 	}
 
 	inline bool operator!=(const Enemy& l, const Enemy& r) {
@@ -80,6 +83,22 @@ namespace rpg {
 	}
 
 	std::ostream& operator<<(std::ostream& os, const Enemy& obj);
+
+	template <typename F, typename ParentCtx = Context<void,void>>
+	void ForEachString(Enemy& obj, const F& f, const ParentCtx* parent_ctx = nullptr) {
+		const auto ctx1 = Context<Enemy, ParentCtx>{ "name", -1, &obj, parent_ctx };
+		f(obj.name, ctx1);
+		const auto ctx2 = Context<Enemy, ParentCtx>{ "battler_name", -1, &obj, parent_ctx };
+		f(obj.battler_name, ctx2);
+		for (int i = 0; i < static_cast<int>(obj.actions.size()); ++i) {
+			const auto ctx21 = Context<Enemy, ParentCtx>{ "actions", i, &obj, parent_ctx };
+			ForEachString(obj.actions[i], f, &ctx21);
+		}
+		(void)obj;
+		(void)f;
+		(void)parent_ctx;
+	}
+
 } // namespace rpg
 } // namespace lcf
 

@@ -1,5 +1,5 @@
 /*
- * This file is part of liblcf. Copyright (c) 2020 liblcf authors.
+ * This file is part of liblcf. Copyright (c) 2021 liblcf authors.
  * https://github.com/EasyRPG/liblcf - https://easyrpg.org
  *
  * liblcf is Free/Libre Open Source Software, released under the MIT License.
@@ -36,7 +36,6 @@
 #include "lcf/rpg/rect.h"
 #include "lcf/rpg/savepicture.h"
 #include "lcf/rpg/terms.h"
-#include "lcf/data.h"
 
 namespace lcf {
 
@@ -103,17 +102,17 @@ struct TypeReader {};
 
 template <class T>
 struct TypeReader<T, Category::Void> {
-	static void ReadLcf(T& ref, LcfReader& stream, uint32_t length) {
+	static void ReadLcf(T&, LcfReader& stream, uint32_t length) {
 		stream.Seek(length, LcfReader::FromCurrent);
 	}
-	static void WriteLcf(const T& ref, LcfWriter& stream) {
+	static void WriteLcf(const T&, LcfWriter&) {
 	}
-	static int LcfSize(const T& ref, LcfWriter& stream) {
+	static int LcfSize(const T&, LcfWriter&) {
 		return 0;
 	}
-	static void WriteXml(const T& ref, XmlWriter& stream) {
+	static void WriteXml(const T&, XmlWriter&) {
 	}
-	static void BeginXml(T& ref, XmlReader& stream) {
+	static void BeginXml(T&, XmlReader&) {
 	}
 	static void ParseXml(T& /* ref */, const std::string& /* data */) {
 		//no-op
@@ -410,7 +409,7 @@ struct Field {
 	virtual void ReadLcf(S& obj, LcfReader& stream, uint32_t length) const = 0;
 	virtual void WriteLcf(const S& obj, LcfWriter& stream) const = 0;
 	virtual int LcfSize(const S& obj, LcfWriter& stream) const = 0;
-	virtual bool IsDefault(const S& obj, const S& ref) const = 0;
+	virtual bool IsDefault(const S& obj, const S& ref, bool is2k3) const = 0;
 	virtual void WriteXml(const S& obj, XmlWriter& stream) const = 0;
 	virtual void BeginXml(S& obj, XmlReader& stream) const = 0;
 	virtual void ParseXml(S& obj, const std::string& data) const = 0;
@@ -455,7 +454,7 @@ struct TypedField : public Field<S> {
 	void ParseXml(S& obj, const std::string& data) const {
 		TypeReader<T>::ParseXml(obj.*ref, data);
 	}
-	bool IsDefault(const S& a, const S& b) const {
+	bool IsDefault(const S& a, const S& b, bool) const {
 		return a.*ref == b.*ref;
 	}
 
@@ -479,13 +478,13 @@ struct DatabaseVersionField : public TypedField<S,T> {
 		}
 		return TypedField<S,T>::LcfSize(obj, stream);
 	}
-	bool IsDefault(const S& a, const S& b) const {
-		if (Data::system.ldb_id == 2003) {
+	bool IsDefault(const S& a, const S& b, bool is2k3) const {
+		if (is2k3) {
 			//DB Version always present in 2k3 db
 			return false;
 		}
 		//Only present if not 0 in 2k db.
-		return TypedField<S,T>::IsDefault(a, b);
+		return TypedField<S,T>::IsDefault(a, b, is2k3);
 	}
 };
 
@@ -508,7 +507,7 @@ struct EmptyField : public Field<S> {
 	void BeginXml(S& /* obj */, XmlReader& /* stream */) const { }
 	void ParseXml(S& /* obj */, const std::string& /* data */) const { }
 
-	bool IsDefault(const S& /* a */, const S& /* b */) const {
+	bool IsDefault(const S& /* a */, const S& /* b */, bool) const {
 		return true;
 	}
 
@@ -544,7 +543,7 @@ struct SizeField : public Field<S> {
 	void ParseXml(S& /* obj */, const std::string& /* data */) const {
 		// no-op
 	}
-	bool IsDefault(const S& a, const S& b) const {
+	bool IsDefault(const S& a, const S& b, bool) const {
 		return (a.*ref).size() == (b.*ref).size();
 	}
 

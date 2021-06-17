@@ -10,10 +10,7 @@ mimedbdir = $(datadir)/mime/packages
 mimedb_DATA = mime/liblcf.xml
 
 cmakeconfigdir = $(libdir)/cmake/liblcf
-cmakeconfig_DATA = \
-	builds/liblcf-config.cmake \
-	builds/cmake/Modules/FindEXPAT.cmake \
-	builds/cmake/Modules/FindICU.cmake
+cmakeconfig_DATA = builds/liblcf-config.cmake
 
 lcfincludedir = $(includedir)/lcf
 lcfldbincludedir = $(includedir)/lcf/ldb
@@ -42,7 +39,6 @@ liblcf_la_LDFLAGS = \
 	$(AM_LDFLAGS) \
 	-no-undefined
 liblcf_la_SOURCES = \
-	src/data.cpp \
 	src/dbarray.cpp \
 	src/encoder.cpp \
 	src/ini.cpp \
@@ -63,8 +59,9 @@ liblcf_la_SOURCES = \
 	src/reader_struct_impl.h \
 	src/reader_util.cpp \
 	src/reader_xml.cpp \
-	src/rpg_fixup.cpp \
 	src/rpg_setup.cpp \
+	src/rpg_terms.cpp \
+	src/saveopt.cpp \
 	src/writer_lcf.cpp \
 	src/writer_xml.cpp \
 	src/generated/fwd_struct_impl.h \
@@ -77,8 +74,9 @@ liblcf_la_SOURCES = \
 	src/generated/ldb_battlecommand.cpp \
 	src/generated/ldb_battlecommands.cpp \
 	src/generated/ldb_battleranimation.cpp \
-	src/generated/ldb_battleranimationdata.cpp \
-	src/generated/ldb_battleranimationextension.cpp \
+	src/generated/ldb_battleranimationitemskill.cpp \
+	src/generated/ldb_battleranimationpose.cpp \
+	src/generated/ldb_battleranimationweapon.cpp \
 	src/generated/ldb_chipset.cpp \
 	src/generated/ldb_class.cpp \
 	src/generated/ldb_commonevent.cpp \
@@ -86,7 +84,6 @@ liblcf_la_SOURCES = \
 	src/generated/ldb_enemy.cpp \
 	src/generated/ldb_enemyaction.cpp \
 	src/generated/ldb_item.cpp \
-	src/generated/ldb_itemanimation.cpp \
 	src/generated/ldb_learning.cpp \
 	src/generated/ldb_music.cpp \
 	src/generated/ldb_skill.cpp \
@@ -141,8 +138,9 @@ liblcf_la_SOURCES = \
 	src/generated/rpg_battlecommand.cpp \
 	src/generated/rpg_battlecommands.cpp \
 	src/generated/rpg_battleranimation.cpp \
-	src/generated/rpg_battleranimationdata.cpp \
-	src/generated/rpg_battleranimationextension.cpp \
+	src/generated/rpg_battleranimationitemskill.cpp \
+	src/generated/rpg_battleranimationpose.cpp \
+	src/generated/rpg_battleranimationweapon.cpp \
 	src/generated/rpg_chipset.cpp \
 	src/generated/rpg_class.cpp \
 	src/generated/rpg_commonevent.cpp \
@@ -157,7 +155,6 @@ liblcf_la_SOURCES = \
 	src/generated/rpg_eventpage.cpp \
 	src/generated/rpg_eventpagecondition.cpp \
 	src/generated/rpg_item.cpp \
-	src/generated/rpg_itemanimation.cpp \
 	src/generated/rpg_learning.cpp \
 	src/generated/rpg_map.cpp \
 	src/generated/rpg_mapinfo.cpp \
@@ -201,7 +198,7 @@ liblcf_la_SOURCES = \
 	src/generated/rpg_variable.cpp
 
 lcfinclude_HEADERS = \
-	src/lcf/data.h \
+	src/lcf/context.h \
 	src/lcf/dbarray.h \
 	src/lcf/dbarrayalloc.h \
 	src/lcf/dbbitarray.h \
@@ -247,8 +244,9 @@ lcfrpginclude_HEADERS = \
 	src/generated/lcf/rpg/battlecommand.h \
 	src/generated/lcf/rpg/battlecommands.h \
 	src/generated/lcf/rpg/battleranimation.h \
-	src/generated/lcf/rpg/battleranimationdata.h \
-	src/generated/lcf/rpg/battleranimationextension.h \
+	src/generated/lcf/rpg/battleranimationitemskill.h \
+	src/generated/lcf/rpg/battleranimationpose.h \
+	src/generated/lcf/rpg/battleranimationweapon.h \
 	src/generated/lcf/rpg/chipset.h \
 	src/generated/lcf/rpg/class.h \
 	src/generated/lcf/rpg/commonevent.h \
@@ -263,7 +261,6 @@ lcfrpginclude_HEADERS = \
 	src/generated/lcf/rpg/eventpagecondition.h \
 	src/generated/lcf/rpg/fwd.h \
 	src/generated/lcf/rpg/item.h \
-	src/generated/lcf/rpg/itemanimation.h \
 	src/generated/lcf/rpg/learning.h \
 	src/generated/lcf/rpg/map.h \
 	src/generated/lcf/rpg/mapinfo.h \
@@ -339,8 +336,14 @@ lcf2xml_CPPFLAGS = $(liblcf_la_CPPFLAGS)
 lcf2xml_CXXFLAGS = $(liblcf_la_CXXFLAGS)
 lcf2xml_LDADD = liblcf.la
 
+lcfstrings_SOURCES = tools/lcfstrings.cpp
+lcfstrings_CPPFLAGS = $(liblcf_la_CPPFLAGS)
+lcfstrings_CXXFLAGS = $(liblcf_la_CXXFLAGS)
+lcfstrings_LDADD = liblcf.la
+
 tools =
 if ENABLE_TOOLS
+tools += lcfstrings
 if SUPPORT_XML
 tools += lcf2xml
 endif

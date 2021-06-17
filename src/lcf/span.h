@@ -1,5 +1,5 @@
 /*
- * This file is part of liblcf. Copyright (c) 2020 liblcf authors.
+ * This file is part of liblcf. Copyright (c) 2021 liblcf authors.
  * https://github.com/EasyRPG/liblcf - https://easyrpg.org
  *
  * liblcf is Free/Libre Open Source Software, released under the MIT License.
@@ -20,6 +20,7 @@
 #define span_FEATURE_WITH_CONTAINER 1
 #define span_FEATURE_CONSTRUCTION_FROM_STDARRAY_ELEMENT_TYPE 1
 #define span_FEATURE_MAKE_SPAN 1
+#define span_CONFIG_SLECT_SPAN span_SPAN_NONSTD
 #include <lcf/third_party/span.h>
 
 namespace lcf {

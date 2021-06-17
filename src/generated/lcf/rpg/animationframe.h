@@ -1,7 +1,7 @@
 /* !!!! GENERATED FILE - DO NOT EDIT !!!!
  * --------------------------------------
  *
- * This file is part of liblcf. Copyright (c) 2020 liblcf authors.
+ * This file is part of liblcf. Copyright (c) 2021 liblcf authors.
  * https://github.com/EasyRPG/liblcf - https://easyrpg.org
  *
  * liblcf is Free/Libre Open Source Software, released under the MIT License.
@@ -15,6 +15,7 @@
 // Headers
 #include <vector>
 #include "lcf/rpg/animationcelldata.h"
+#include "lcf/context.h"
 #include <ostream>
 #include <type_traits>
 
@@ -38,6 +39,18 @@ namespace rpg {
 	}
 
 	std::ostream& operator<<(std::ostream& os, const AnimationFrame& obj);
+
+	template <typename F, typename ParentCtx = Context<void,void>>
+	void ForEachString(AnimationFrame& obj, const F& f, const ParentCtx* parent_ctx = nullptr) {
+		for (int i = 0; i < static_cast<int>(obj.cells.size()); ++i) {
+			const auto ctx1 = Context<AnimationFrame, ParentCtx>{ "cells", i, &obj, parent_ctx };
+			ForEachString(obj.cells[i], f, &ctx1);
+		}
+		(void)obj;
+		(void)f;
+		(void)parent_ctx;
+	}
+
 } // namespace rpg
 } // namespace lcf
 

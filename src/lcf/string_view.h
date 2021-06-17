@@ -1,5 +1,5 @@
 /*
- * This file is part of liblcf. Copyright (c) 2020 liblcf authors.
+ * This file is part of liblcf. Copyright (c) 2021 liblcf authors.
  * https://github.com/EasyRPG/liblcf - https://easyrpg.org
  *
  * liblcf is Free/Libre Open Source Software, released under the MIT License.
@@ -18,6 +18,7 @@
 
 #define nssv_CONFIG_NO_EXCEPTIONS 1
 #define nssv_CONFIG_CONVERSION_STD_STRING 1
+#define nssv_CONFIG_SELECT_STRING_VIEW nssv_STRING_VIEW_NONSTD
 #include <lcf/third_party/string_view.h>
 
 namespace lcf {

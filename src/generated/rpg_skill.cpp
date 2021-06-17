@@ -1,7 +1,7 @@
 /* !!!! GENERATED FILE - DO NOT EDIT !!!!
  * --------------------------------------
  *
- * This file is part of liblcf. Copyright (c) 2020 liblcf authors.
+ * This file is part of liblcf. Copyright (c) 2021 liblcf authors.
  * https://github.com/EasyRPG/liblcf - https://easyrpg.org
  *
  * liblcf is Free/Libre Open Source Software, released under the MIT License.
@@ -12,7 +12,7 @@
 // Headers
 #include "lcf/rpg/skill.h"
 
-
+constexpr const char* lcf::rpg::Skill::kDefaultMessage;
 namespace lcf {
 namespace rpg {
 
@@ -64,6 +64,7 @@ std::ostream& operator<<(std::ostream& os, const Skill& obj) {
 		os << (i == 0 ? "[" : ", ") << obj.battler_animation_data[i];
 	}
 	os << "]";
+	os << ", easyrpg_battle2k3_message="<< obj.easyrpg_battle2k3_message;
 	os << "}";
 	return os;
 }

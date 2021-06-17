@@ -1,7 +1,7 @@
 /* !!!! GENERATED FILE - DO NOT EDIT !!!!
  * --------------------------------------
  *
- * This file is part of liblcf. Copyright (c) 2020 liblcf authors.
+ * This file is part of liblcf. Copyright (c) 2021 liblcf authors.
  * https://github.com/EasyRPG/liblcf - https://easyrpg.org
  *
  * liblcf is Free/Libre Open Source Software, released under the MIT License.
@@ -179,6 +179,13 @@ static TypedField<rpg::Enemy, std::vector<rpg::EnemyAction>> static_actions(
 	1,
 	0
 );
+static TypedField<rpg::Enemy, int32_t> static_maniac_unarmed_animation(
+	&rpg::Enemy::maniac_unarmed_animation,
+	LDB_Reader::ChunkEnemy::maniac_unarmed_animation,
+	"maniac_unarmed_animation",
+	0,
+	0
+);
 
 
 template <>
@@ -206,6 +213,7 @@ Field<rpg::Enemy> const* Struct<rpg::Enemy>::fields[] = {
 	&static_size_attribute_ranks,
 	&static_attribute_ranks,
 	&static_actions,
+	&static_maniac_unarmed_animation,
 	NULL
 };
 

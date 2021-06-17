@@ -1,7 +1,7 @@
 /* !!!! GENERATED FILE - DO NOT EDIT !!!!
  * --------------------------------------
  *
- * This file is part of liblcf. Copyright (c) 2020 liblcf authors.
+ * This file is part of liblcf. Copyright (c) 2021 liblcf authors.
  * https://github.com/EasyRPG/liblcf - https://easyrpg.org
  *
  * liblcf is Free/Libre Open Source Software, released under the MIT License.
@@ -18,8 +18,9 @@
 #include "lcf/dbbitarray.h"
 #include "lcf/dbstring.h"
 #include "lcf/enum_tags.h"
-#include "lcf/rpg/battleranimationdata.h"
+#include "lcf/rpg/battleranimationitemskill.h"
 #include "lcf/rpg/sound.h"
+#include "lcf/context.h"
 #include <ostream>
 #include <type_traits>
 
@@ -30,6 +31,9 @@ namespace lcf {
 namespace rpg {
 	class Skill {
 	public:
+		// Sentinel name used to denote that the default skill start message should be used.
+		static constexpr const char* kDefaultMessage = "default_message";
+
 		enum Type {
 			Type_normal = 0,
 			Type_teleport = 1,
@@ -101,7 +105,8 @@ namespace rpg {
 		DBBitArray attribute_effects;
 		bool affect_attr_defence = false;
 		int32_t battler_animation = -1;
-		std::vector<BattlerAnimationData> battler_animation_data;
+		std::vector<BattlerAnimationItemSkill> battler_animation_data;
+		DBString easyrpg_battle2k3_message = DBString(kDefaultMessage);
 	};
 	inline std::ostream& operator<<(std::ostream& os, Skill::Type code) {
 		os << static_cast<std::underlying_type_t<decltype(code)>>(code);
@@ -150,7 +155,8 @@ namespace rpg {
 		&& l.attribute_effects == r.attribute_effects
 		&& l.affect_attr_defence == r.affect_attr_defence
 		&& l.battler_animation == r.battler_animation
-		&& l.battler_animation_data == r.battler_animation_data;
+		&& l.battler_animation_data == r.battler_animation_data
+		&& l.easyrpg_battle2k3_message == r.easyrpg_battle2k3_message;
 	}
 
 	inline bool operator!=(const Skill& l, const Skill& r) {
@@ -158,6 +164,26 @@ namespace rpg {
 	}
 
 	std::ostream& operator<<(std::ostream& os, const Skill& obj);
+
+	template <typename F, typename ParentCtx = Context<void,void>>
+	void ForEachString(Skill& obj, const F& f, const ParentCtx* parent_ctx = nullptr) {
+		const auto ctx1 = Context<Skill, ParentCtx>{ "name", -1, &obj, parent_ctx };
+		f(obj.name, ctx1);
+		const auto ctx2 = Context<Skill, ParentCtx>{ "description", -1, &obj, parent_ctx };
+		f(obj.description, ctx2);
+		const auto ctx3 = Context<Skill, ParentCtx>{ "using_message1", -1, &obj, parent_ctx };
+		f(obj.using_message1, ctx3);
+		const auto ctx4 = Context<Skill, ParentCtx>{ "using_message2", -1, &obj, parent_ctx };
+		f(obj.using_message2, ctx4);
+		const auto ctx13 = Context<Skill, ParentCtx>{ "sound_effect", -1, &obj, parent_ctx };
+		ForEachString(obj.sound_effect, f, &ctx13);
+		const auto ctx35 = Context<Skill, ParentCtx>{ "easyrpg_battle2k3_message", -1, &obj, parent_ctx };
+		f(obj.easyrpg_battle2k3_message, ctx35);
+		(void)obj;
+		(void)f;
+		(void)parent_ctx;
+	}
+
 } // namespace rpg
 } // namespace lcf
 

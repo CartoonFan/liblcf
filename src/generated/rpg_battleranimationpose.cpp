@@ -1,7 +1,7 @@
 /* !!!! GENERATED FILE - DO NOT EDIT !!!!
  * --------------------------------------
  *
- * This file is part of liblcf. Copyright (c) 2020 liblcf authors.
+ * This file is part of liblcf. Copyright (c) 2021 liblcf authors.
  * https://github.com/EasyRPG/liblcf - https://easyrpg.org
  *
  * liblcf is Free/Libre Open Source Software, released under the MIT License.
@@ -10,17 +10,18 @@
  */
 
 // Headers
-#include "lcf/rpg/battleranimationdata.h"
-
+#include "lcf/rpg/battleranimationpose.h"
 
 namespace lcf {
 namespace rpg {
 
-std::ostream& operator<<(std::ostream& os, const BattlerAnimationData& obj) {
-	os << "BattlerAnimationData{";
-	os << "move="<< obj.move;
-	os << ", after_image="<< obj.after_image;
-	os << ", pose="<< obj.pose;
+std::ostream& operator<<(std::ostream& os, const BattlerAnimationPose& obj) {
+	os << "BattlerAnimationPose{";
+	os << "name="<< obj.name;
+	os << ", battler_name="<< obj.battler_name;
+	os << ", battler_index="<< obj.battler_index;
+	os << ", animation_type="<< obj.animation_type;
+	os << ", battle_animation_id="<< obj.battle_animation_id;
 	os << "}";
 	return os;
 }
