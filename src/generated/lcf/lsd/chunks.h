@@ -348,6 +348,8 @@ namespace LSD_Reader {
 			easyrpg_type = 0xCA,
 			/** Current zoom level of picture (y direction). */
 			maniac_current_magnify_height = 0x0A,
+			/** Deflate compressed image data of a picture modified with EditPicture command */
+			maniac_image_data = 0x1C,
 			/** Final zoom level to animate picture to (y direction). */
 			maniac_finish_magnify_height = 0x24
 		};

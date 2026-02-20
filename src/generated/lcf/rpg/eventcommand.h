@@ -192,7 +192,8 @@ namespace rpg {
 			Maniac_WritePicture = 3026,
 			Maniac_AddMoveRoute = 3027,
 			Maniac_EditTile = 3028,
-			Maniac_ControlTextProcessing = 3029
+			Maniac_ControlTextProcessing = 3029,
+			Maniac_Zoom = 3032
 		};
 		static constexpr auto kCodeTags = lcf::EnumTags{
 			Code::END, "END",
@@ -358,7 +359,8 @@ namespace rpg {
 			Code::Maniac_WritePicture, "Maniac_WritePicture",
 			Code::Maniac_AddMoveRoute, "Maniac_AddMoveRoute",
 			Code::Maniac_EditTile, "Maniac_EditTile",
-			Code::Maniac_ControlTextProcessing, "Maniac_ControlTextProcessing"
+			Code::Maniac_ControlTextProcessing, "Maniac_ControlTextProcessing",
+			Code::Maniac_Zoom, "Maniac_Zoom"
 		};
 
 		int32_t code = 0;

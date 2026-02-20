@@ -314,6 +314,13 @@ static TypedField<rpg::SavePicture, double> static_maniac_current_magnify_height
 	0,
 	0
 );
+static TypedField<rpg::SavePicture, std::vector<uint8_t>> static_maniac_image_data(
+	&rpg::SavePicture::maniac_image_data,
+	LSD_Reader::ChunkSavePicture::maniac_image_data,
+	"maniac_image_data",
+	0,
+	0
+);
 static TypedField<rpg::SavePicture, int32_t> static_maniac_finish_magnify_height(
 	&rpg::SavePicture::maniac_finish_magnify_height,
 	LSD_Reader::ChunkSavePicture::maniac_finish_magnify_height,
@@ -367,6 +374,7 @@ Field<rpg::SavePicture> const* Struct<rpg::SavePicture>::fields[] = {
 	&static_easyrpg_blend_mode,
 	&static_easyrpg_type,
 	&static_maniac_current_magnify_height,
+	&static_maniac_image_data,
 	&static_maniac_finish_magnify_height,
 	NULL
 };

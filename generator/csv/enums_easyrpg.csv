@@ -37,6 +37,7 @@ EventCommand,Code,Maniac_WritePicture,3026
 EventCommand,Code,Maniac_AddMoveRoute,3027
 EventCommand,Code,Maniac_EditTile,3028
 EventCommand,Code,Maniac_ControlTextProcessing,3029
+EventCommand,Code,Maniac_Zoom,3032
 EventPage,ManiacEventInfo,action,0
 EventPage,ManiacEventInfo,touched,1
 EventPage,ManiacEventInfo,collision,2

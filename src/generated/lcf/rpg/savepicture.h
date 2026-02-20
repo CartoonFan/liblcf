@@ -16,6 +16,7 @@
 #include <array>
 #include <stdint.h>
 #include <string>
+#include <vector>
 #include "lcf/enum_tags.h"
 #include "lcf/context.h"
 #include <ostream>
@@ -161,6 +162,7 @@ namespace rpg {
 		int32_t easyrpg_blend_mode = 0;
 		int32_t easyrpg_type = 0;
 		double maniac_current_magnify_height = 100.0;
+		std::vector<uint8_t> maniac_image_data;
 		int32_t maniac_finish_magnify_height = 100;
 	};
 	inline std::ostream& operator<<(std::ostream& os, SavePicture::Effect code) {
@@ -237,6 +239,7 @@ namespace rpg {
 		&& l.easyrpg_blend_mode == r.easyrpg_blend_mode
 		&& l.easyrpg_type == r.easyrpg_type
 		&& l.maniac_current_magnify_height == r.maniac_current_magnify_height
+		&& l.maniac_image_data == r.maniac_image_data
 		&& l.maniac_finish_magnify_height == r.maniac_finish_magnify_height;
 	}
 
