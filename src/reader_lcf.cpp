@@ -282,6 +282,10 @@ void LcfReader::Skip(const struct LcfReader::Chunk& chunk_info, const char* wher
 	Log::Debug("Skipped Chunk %02X (%" PRIu32 " byte) in lcf at %" PRIX32 " (%s)",
 			chunk_info.ID, chunk_info.length, Tell(), where);
 
+	Dump(chunk_info);
+}
+
+void LcfReader::Dump(const struct LcfReader::Chunk& chunk_info) {
 	std::stringstream ss;
 	ss << std::hex;
 

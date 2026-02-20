@@ -190,10 +190,17 @@ public:
 	 * In debug builds, dumps the content of the
 	 * skipped chunk to stderr.
 	 *
-	 * @param chunk_info chunk that will be skipped.
+	 * @param chunk_info chunk that will be skipped and dumped.
 	 * @param where name of the caller that caused the skip, for finding unknown chunks
 	 */
 	void Skip(const struct LcfReader::Chunk& chunk_info, const char* where);
+
+	/**
+	 * Like Skip but only dumps the content of the skipped chunk on stderr.
+	 *
+	 * @chunk_Info chunk that will be skipped and dumped.
+	 */
+	void Dump(const struct LcfReader::Chunk& chunk_info);
 
 	/**
 	 * Encodes a string to UTF-8 using the set encoding

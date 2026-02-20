@@ -81,7 +81,8 @@ void Struct<S>::ReadLcf(S& obj, LcfReader& stream) {
 			if (bytes_read != chunk_info.length) {
 				Log::Warning("%s: Corrupted Chunk 0x%02" PRIx32 " (size: %" PRIu32 ", pos: 0x%" PRIx32 "): %s : Read %" PRIu32 " bytes!",
 						Struct<S>::name, chunk_info.ID, chunk_info.length, off, it->second->name, bytes_read);
-				stream.Seek(off + chunk_info.length);
+				stream.Seek(off);
+				stream.Dump(chunk_info);
 			}
 		}
 		else {
