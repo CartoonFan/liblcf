@@ -97,11 +97,13 @@ namespace rpg {
 		);
 		enum EasyRpgType {
 			EasyRpgType_default = 0,
-			EasyRpgType_window = 1
+			EasyRpgType_window = 1,
+			EasyRpgType_canvas = 2
 		};
 		static constexpr auto kEasyRpgTypeTags = lcf::makeEnumTags<EasyRpgType>(
 			"default",
-			"window"
+			"window",
+			"canvas"
 		);
 
 		int ID = 0;

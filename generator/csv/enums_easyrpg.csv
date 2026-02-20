@@ -55,5 +55,6 @@ SavePicture,EasyRpgFlip,y,2
 SavePicture,EasyRpgFlip,both,3
 SavePicture,EasyRpgType,default,0
 SavePicture,EasyRpgType,window,1
+SavePicture,EasyRpgType,canvas,2
 Skill,HpType,cost,0
 Skill,HpType,percent,1
