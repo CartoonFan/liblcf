@@ -379,7 +379,7 @@ if(LIBLCF_WITH_ICU)
 		set(LCF_SUPPORT_ICU 1)
 	else()
 		if(NOT WIN32)
-			message(FATAL_ERROR "ICU not found. Use LCF_SUPPORT_ICU=0 to disable ICU support (not recommended).")
+			message(FATAL_ERROR "ICU not found. Use LIBLCF_WITH_ICU=0 to disable ICU support (not recommended).")
 		endif()
 
 		message(STATUS "ICU not found. Using the system library.")
