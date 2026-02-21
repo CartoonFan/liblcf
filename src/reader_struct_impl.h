@@ -15,6 +15,7 @@
 #include "lcf/lmt/reader.h"
 #include "lcf/lmu/reader.h"
 #include "lcf/lsd/reader.h"
+#include "lcf/reader_lcf.h"
 #include "reader_struct.h"
 #include "lcf/rpg/save.h"
 #include "log.h"
@@ -82,7 +83,9 @@ void Struct<S>::ReadLcf(S& obj, LcfReader& stream) {
 				Log::Warning("%s: Corrupted Chunk 0x%02" PRIx32 " (size: %" PRIu32 ", pos: 0x%" PRIx32 "): %s : Read %" PRIu32 " bytes!",
 						Struct<S>::name, chunk_info.ID, chunk_info.length, off, it->second->name, bytes_read);
 				stream.Seek(off);
-				stream.Dump(chunk_info);
+				stream.Dump(bytes_read);
+
+				stream.Seek(off + chunk_info.length);
 			}
 		}
 		else {

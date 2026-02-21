@@ -198,9 +198,9 @@ public:
 	/**
 	 * Like Skip but only dumps the content of the skipped chunk on stderr.
 	 *
-	 * @chunk_Info chunk that will be skipped and dumped.
+	 * @param length how many bytes to dump
 	 */
-	void Dump(const struct LcfReader::Chunk& chunk_info);
+	void Dump(uint32_t length);
 
 	/**
 	 * Encodes a string to UTF-8 using the set encoding
